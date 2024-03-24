@@ -24,6 +24,8 @@ router.delete('/:id', productController.deleteProduct);
 // Delete all products
 router.delete('/', productController.deleteAllProducts);
 
+// Retrieve all reviews for a product
+router.get('/:id/reviews', productController.getProductReviews);
 
 
 export default router;

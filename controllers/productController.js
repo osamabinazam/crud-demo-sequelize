@@ -3,7 +3,7 @@ import db from "../models/index.js";
 // Create main model object
 
 const Product = db.products;
-const review = db.reviews;
+const Review = db.reviews;
 
 
 // Create and Save a new Product
@@ -143,6 +143,25 @@ const findAllPublished = async (req, res) => {
         });
 }
 
+// Get all reviews for a product
+const getProductReviews = async (req, res) => {
+    const id = req.params.id;
+
+    Product.findByPk(id,{ 
+        include: [{
+            model: Review,
+            as: "reviews",
+        }] })
+        .then(data => {
+            res.status(200).send(data);
+        })
+        .catch(err => {
+            res.status(500).send({
+                message: err.message || "An error occurred while retrieving the product."
+            });
+        }
+    );
+}
 
 
 export default {
@@ -152,6 +171,7 @@ export default {
     updateProduct,
     deleteProduct,
     deleteAllProducts,
-    findAllPublished
+    findAllPublished,
+    getProductReviews
 };
 

@@ -7,7 +7,7 @@ import { Sequelize, DataTypes } from 'sequelize';
 
 
 // Creeate a connection to the database using the configuration from config/dbConfig.js)
-const sequelize = new Sequelize(dbConfig.db, dbConfig.user, dbConfig.password, {
+const sequelize = new Sequelize(dbConfig.database, dbConfig.user, dbConfig.password, {
     host: dbConfig.host,
     dialect: dbConfig.dialect,
     // operatorsAliases: false,
@@ -37,9 +37,19 @@ db.products = productModel(sequelize, DataTypes);
 // db.users = userModel(sequelize, DataTypes);
 db.reviews= reviewModel(sequelize, DataTypes);
 
-db.sequelize.sync({ force: true })
+db.sequelize.sync()
 .then(() => { console.log("Drop and re-sync db."); }
 );
+
+
+// Setting up the relationships between the tables
+db.products.hasMany(db.reviews, { as: "reviews",
+foreignKey: "productId"
+});
+db.reviews.belongsTo(db.products, {
+foreignKey: "productId",
+as: "product",
+});
 
 // export the database model
 export default db;
